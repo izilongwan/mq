@@ -2,9 +2,7 @@ package com.publish.controller;
 
 import javax.annotation.Resource;
 
-import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,8 +36,16 @@ public class UserController {
         return R.SUCCESS(v);
     }
 
-    @Bean
-    public Queue firstQueue() {
-        return new Queue("simple.qu");
+    @GetMapping("direct/{id}")
+    public R<R<String>> id1(@PathVariable String id) {
+        R<String> v = new R<String>(id);
+
+        String exchange = "direct";
+        String key = id;
+        R<String> rs = R.SUCCESS(id);
+
+        rabbitTemplate.convertAndSend(exchange, key, rs);
+
+        return R.SUCCESS(v);
     }
 }

@@ -13,4 +13,12 @@
         <version>1.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.share</groupId>
+            <artifactId>share</artifactId>
+            <version>1.0</version>
+        </dependency>
+    </dependencies>
 </project>
