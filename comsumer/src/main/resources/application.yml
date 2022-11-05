@@ -5,6 +5,13 @@ spring:
     url: jdbc:mysql://localhost:3306/takeout?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
     username: root
     password: root
+  rabbitmq:
+    virtual-host: /
+    listener:
+      # direct:
+        # acknowledge-mode: MANUAL # 消息处理状态
+      simple:
+        prefetch: 1 #每次只能消费一条消息，处理完成才能获取下一个消息
 
 server:
   port: 9003

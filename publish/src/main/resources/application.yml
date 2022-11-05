@@ -10,9 +10,8 @@ spring:
     virtual-host: /
     username: guest
     password: guest
-    listener:
-      simple:
-        prefetch: 1 #每次只能获取一条消息，处理完成才能获取下一个消息
+    publisher-confirm-type: CORRELATED # 确认模式 消息发送到exchange？
+    publisher-returns: true # exchange 分发消息到队列？
 
 
 server:
