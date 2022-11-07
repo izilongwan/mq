@@ -20,6 +20,7 @@ public class RabbitLisener {
             "1", "0" }))
     public void listener1(R<String> msg) {
         log.info("msg 1 ==> {}", msg);
+        int o = 1 / 0;
     }
 
     @RabbitListener(bindings = {
@@ -89,4 +90,10 @@ public class RabbitLisener {
         Thread.sleep(1000);
     }
 
+    // @RabbitListener(bindings = @QueueBinding(value = @Queue(name =
+    // "error.queue"), exchange = @Exchange(value = "error.exchange"), key = {
+    // "1" }))
+    // public void errorListener(R<String> msg) {
+    // log.info("error ==> {}", msg);
+    // }
 }

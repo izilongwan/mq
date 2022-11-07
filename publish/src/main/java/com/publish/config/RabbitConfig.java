@@ -39,6 +39,8 @@ public class RabbitConfig implements ApplicationContextAware {
         rabbitTemplate.setReturnsCallback((ReturnedMessage returned) -> {
             log.info("消息未到达队列 => {}", returned);
         });
+
+        rabbitTemplate.setRecoveryCallback(null);
     }
 
 }

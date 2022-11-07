@@ -70,7 +70,7 @@ public class UserController {
         String key = id;
         R<String> rs = R.SUCCESS(id);
 
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 5; i++) {
             MessagePostProcessor messagePostProcessor = new MessagePostProcessor() {
 
                 @Override
