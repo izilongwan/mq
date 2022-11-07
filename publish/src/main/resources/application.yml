@@ -10,8 +10,10 @@ spring:
     virtual-host: /
     username: guest
     password: guest
-    publisher-confirm-type: CORRELATED # 确认模式 消息发送到exchange？
-    publisher-returns: true # exchange 分发消息到队列？
+    publisher-confirm-type: CORRELATED # 异步确认消息
+    publisher-returns: true # exchange -> 队列确认
+    template:
+      mandatory: true # 路由失败策略
 
 
 server:

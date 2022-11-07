@@ -72,6 +72,7 @@ public class RabbitLisener {
             @QueueBinding(value = @Queue(name = "ttl.queue", arguments = {
                     @Argument(name = "x-dead-letter-exchange", value = "direct"),
                     @Argument(name = "x-dead-letter-routing-key", value = "1"),
+                    @Argument(name = "x-message-ttl", value = "10000", type = "java.lang.Integer"), // 消息过期时间
             }), exchange = @Exchange(value = "ttl.exchange"), key = {
                     "2", "0" })
     })

@@ -1,17 +1,18 @@
 package com.publish.controller;
 
-import javax.annotation.PostConstruct;
+import java.util.UUID;
+
 import javax.annotation.Resource;
 
 import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessagePostProcessor;
-import org.springframework.amqp.core.ReturnedMessage;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson2.JSON;
@@ -26,27 +27,10 @@ public class UserController {
     @Resource
     RabbitTemplate rabbitTemplate;
 
-    @PostConstruct
-    public void name() {
-        // publish异常消息处理
-        // exchange处理模式
-        rabbitTemplate.setMandatory(true);
-        rabbitTemplate.setConfirmCallback((CorrelationData c, boolean b, String s) -> {
-            if (!b) {
-                log.info("{}", c);
-                log.info(s);
-            }
-        });
-
-        rabbitTemplate.setReturnsCallback((ReturnedMessage returned) -> {
-            log.info("{}", returned);
-        });
-    }
-
+    // 解析查询参数
     @GetMapping("")
-    public R<R<String>> user() {
-        R<String> v = new R<String>("1");
-        return R.SUCCESS(v);
+    public R<String> user(@RequestParam String name) {
+        return R.SUCCESS(name);
     }
 
     @GetMapping("{id}")
@@ -70,8 +54,9 @@ public class UserController {
         String key = id;
         R<String> rs = R.SUCCESS(id);
 
-        for (int i = 0; i < 20; i++) {
-            rabbitTemplate.convertAndSend(exchange, key, rs);
+        for (int i = 0; i < 1; i++) {
+            CorrelationData correlationData = new CorrelationData(UUID.randomUUID().toString());
+            rabbitTemplate.convertAndSend(exchange, key, rs, correlationData);
         }
 
         return R.SUCCESS(v);
@@ -83,7 +68,7 @@ public class UserController {
 
         String exchange = "ttl.exchange";
         String key = id;
-        final R<String> rs = R.SUCCESS(id);
+        R<String> rs = R.SUCCESS(id);
 
         for (int i = 0; i < 20; i++) {
             MessagePostProcessor messagePostProcessor = new MessagePostProcessor() {
@@ -91,13 +76,17 @@ public class UserController {
                 @Override
                 public Message postProcessMessage(
                         Message message) throws AmqpException {
+
                     // 设置消息过期时间
                     message.getMessageProperties().setExpiration(delay);
                     return message;
                 }
 
             };
-            rabbitTemplate.convertAndSend(exchange, key, rs, messagePostProcessor);
+
+            CorrelationData correlationData = new CorrelationData(UUID.randomUUID().toString());
+
+            rabbitTemplate.convertAndSend(exchange, key, rs, messagePostProcessor, correlationData);
         }
 
         return R.SUCCESS(v);

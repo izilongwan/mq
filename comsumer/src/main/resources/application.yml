@@ -8,10 +8,12 @@ spring:
   rabbitmq:
     virtual-host: /
     listener:
-      # direct:
-        # acknowledge-mode: MANUAL # 消息处理状态
       simple:
+        acknowledge-mode: AUTO # 消息处理状态
         prefetch: 1 #每次只能消费一条消息，处理完成才能获取下一个消息
+        retry:
+          enabled: true
+          max-attempts: 5 # 最大重试次数
 
 server:
   port: 9003
