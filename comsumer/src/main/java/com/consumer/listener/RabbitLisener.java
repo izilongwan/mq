@@ -13,6 +13,13 @@ import com.rabbitmq.client.Channel;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * 消息确认消费机制：
+ * 开启生产者确认默认，确保消息到达队列
+ * 开启持久化，确保未消费消息不会丢失
+ * 开启消费者确认机制为AUTO，spring确认处理成功返回ack
+ * 开启消费者失败重试机制，设置messageRecoverer，失败转发到异常交换机，特殊处理
+ */
 @Component
 @Slf4j
 public class RabbitLisener {
@@ -62,7 +69,7 @@ public class RabbitLisener {
     }
 
     /**
-     * 死信消息：
+     * 死信消息：队列转发到交换机
      * 消息过期且未被消费
      * 队列消息长度最大限制
      * 消息拒收且未返回原队列
