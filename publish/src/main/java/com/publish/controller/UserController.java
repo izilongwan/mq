@@ -1,5 +1,9 @@
 package com.publish.controller;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -29,8 +33,15 @@ public class UserController {
 
     // 解析查询参数
     @GetMapping("")
-    public R<String> user(@RequestParam String name) {
-        return R.SUCCESS(name);
+    public R<List<HashMap<String, List<String>>>> user(@RequestParam String name) {
+        HashMap<String, List<String>> map = new HashMap<>();
+        List<HashMap<String, List<String>>> list = new ArrayList<>();
+
+        map.put(name, Arrays.asList(Arrays.toString(name.split("")), "1"));
+
+        list.add(map);
+
+        return R.SUCCESS(list);
     }
 
     @GetMapping("{id}")

@@ -103,4 +103,20 @@ public class RabbitLisener {
     // public void errorListener(R<String> msg) {
     // log.info("error ==> {}", msg);
     // }
+
+    /**
+     * 消息堆积：
+     * 惰性队列（磁盘存储，消息上线高；读写速度受限于磁盘）
+     * 增加消费者
+     * 消费端开启多线程
+     */
+    @RabbitListener(bindings = {
+            @QueueBinding(value = @Queue(name = "lazy.queue", arguments = {
+                    @Argument(name = "x-queue-mode", value = "lazy")
+            }), exchange = @Exchange(value = "lazy.exchange"), key = {
+                    "0" })
+    })
+    public void lazyListener(R<String> msg) {
+        log.info("lazy ==> {}", msg);
+    }
 }
